@@ -7,34 +7,68 @@
     </div>
 
     <el-card class="box-card">
-      <el-row v-for="(value,key,index) in object " v-if='index<=3' type="flex" class="row-bg" justify="space-around">
+      <el-row type="flex" class="row-bg" justify="space-around">
         <el-col :span="7" style="padding-bottom: 10%;text-align: left">
-          <div>{{key}}</div>
+          <div>EOS帐号：</div>
         </el-col>
         <el-col :span="5">
           <div></div>
         </el-col>
         <el-col :span="10" style="padding-bottom: 10%;text-align: right">
-          <div>{{value}}</div>
+          <div>{{object.EOS帐号名}}</div>
         </el-col>
       </el-row>
 
+      <el-row type="flex" class="row-bg" justify="space-around">
+        <el-col :span="7" style="padding-bottom: 10%;text-align: left">
+          <div>快照余额:</div>
+        </el-col>
+        <el-col :span="5">
+          <div></div>
+        </el-col>
+        <el-col :span="10" style="padding-bottom: 10%;text-align: right">
+          <div>{{object.快照余额}}</div>
+        </el-col>
+      </el-row>
 
+      <el-row type="flex" class="row-bg" justify="space-around">
+        <el-col :span="7" style="padding-bottom: 10%;text-align: left">
+          <div>BOS帐号:</div>
+        </el-col>
+        <el-col :span="5">
+          <div></div>
+        </el-col>
+        <el-col :span="10" style="padding-bottom: 10%;text-align: right">
+          <div>{{object.BOS帐号名}}</div>
+        </el-col>
+      </el-row>
+
+      <el-row type="flex" class="row-bg" justify="space-around">
+        <el-col :span="7" style="padding-bottom: 10%;text-align: left">
+          <div>BOS余额:</div>
+        </el-col>
+        <el-col :span="5">
+          <div></div>
+        </el-col>
+        <el-col :span="10" style="padding-bottom: 10%;text-align: right">
+          <div>{{object.BOS余额}}</div>
+        </el-col>
+      </el-row>
     </el-card>
 
     <el-card class="box-card2">
       帐号权限
       <div style="padding-bottom: 5%;text-align: left">active:</div>
-      <div style="padding-bottom: 5%;text-align: left;word-wrap: break-word;">{{object.active}}</div>
+      <div style="padding-bottom: 5%;text-align: left;word-wrap: break-word;">{{re[0].active_key}}</div>
       <div style="padding-bottom: 5%;text-align: left">owner:</div>
-      <div style="padding-bottom: 5%;text-align: left;word-wrap: break-word;">{{object.owner}}</div>
+      <div style="padding-bottom: 5%;text-align: left;word-wrap: break-word;">{{re[0].owner_key}}</div>
     </el-card>
 
     <el-card class="box-card3">
-
+      <img src="../src/assets/banner.png"/>
     </el-card>
 
-    <footer>Powered by laoge</footer>
+    <footer>Powered by laoge node</footer>
 
   </div>
 
@@ -48,14 +82,14 @@
       return {
         account: 'bocai.game',
         object: {
-          EOS帐号名: 'bocai.game',
-          快照余额: '90.0021',
-          BOS帐号名: 'bocai.game',
-          BOS余额: '90.0021',
-          active: 'EOSy',
-          owner: 'EOS6wiVouay8NidJNTZvKdXwX1dYFa2akVg463ABHcmKHebWDYR8y',
+          EOS帐号名: '0',
+          快照余额: '0',
+          BOS帐号名: '0',
+          BOS余额: '0',
+          active: 'EOS',
+          owner: 'EOS',
         },
-        respone: [{
+        re: [{
           "eos_account": "bocai.game",
           "eos_balance": "53.5601 EOS",
           "bos_account": "danihzwzweuh",
@@ -86,13 +120,29 @@
       created() {
         this.$http.get('https://api.boslaoge.me/' + this.account).then(res => {
           let ress = JSON.stringify(res.body)
-          alert(ress)
-          // this.object.EOS帐号名=ress[0].eos_account
-          // this.object.快照余额=ress[0].eos_balance
-          // this.object.BOS帐号名=ress[0].bos_account
-          // this.object.BOS余额=ress[0].bos_balance
-          // this.object.active=ress[0].bos_balance
-          // this.object.owner=ress[0].bos_balance
+
+          if(ress.length<3){
+            this.$notify.error({
+              title: '输入错误',
+              message: '请确定输入正确的EOS帐号...',
+            })
+            this.object.EOS帐号名=0
+            this.object.快照余额=0
+            this.object.BOS帐号名=0
+            this.object.BOS余额=0
+          }
+
+          let resss =JSON.parse(ress)
+          this.re=resss
+          for(var i=0;i<resss.length;i++){
+            this.object.EOS帐号名=resss[i].eos_account
+            this.object.快照余额=resss[i].eos_balance
+            this.object.BOS帐号名=resss[i].bos_account
+            this.object.BOS余额=resss[i].bos_balance
+            this.object.active=resss[i].active_key
+            this.object.owner=resss[i].owner_key
+          }
+
         })
       }
     }
@@ -132,7 +182,7 @@
   }
 
   img {
-    width: 15%;
+    width:99%;
   }
 
   a {
@@ -164,7 +214,7 @@
 
   .box-card3 {
     margin: 2%;
-    padding-top: 1%;
+    padding-top: 0%;
     height: 24%;
   }
 
