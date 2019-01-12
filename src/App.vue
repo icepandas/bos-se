@@ -120,7 +120,7 @@
       created() {
         this.$http.get('https://api.boslaoge.me/' + this.account).then(res => {
           let ress = JSON.stringify(res.body)
-
+          let that = this.$router;
           if(ress.length<3){
             this.$notify.error({
               title: '输入错误',
