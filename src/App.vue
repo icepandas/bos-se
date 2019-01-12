@@ -83,11 +83,11 @@
         account: 'bocai.game',
         object: {
           EOS帐号名: '0',
-          快照余额: '0',
+          快照余额: '0.00',
           BOS帐号名: '0',
-          BOS余额: '0',
-          active: 'EOS',
-          owner: 'EOS',
+          BOS余额: '0.00',
+          active: 'EOSy',
+          owner: 'EOS6w',
         },
         re: [{
           "eos_account": "bocai.game",
